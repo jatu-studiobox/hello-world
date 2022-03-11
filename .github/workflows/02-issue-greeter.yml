@@ -5,6 +5,8 @@ on:
 jobs:
   my-job:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
       - name: my-step
         env:
@@ -13,5 +15,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           curl -s -X POST https://api.github.com/repos/$OWNER/$REPO/issues/$ISSUE_NUMBER/comments \
-            -d '{"body":"Hello ${{ github.event.issue.user.login }}, thanks for your issue!"}'
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            --header 'content-type: application/json' \
+            --data '{"body":"Hello ${{ github.event.issue.user.login }}, thanks for your issue!"}'
+            
